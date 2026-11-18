@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎭 GhostProfile — Anti-Detect Browser & Multi-Account Fingerprint Manager</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">🎭</div>
+      <div>
+        <h1>GhostProfile — Anti-Detect Browser Manager</h1>
+        <p>Quản lý đa tài khoản cô lập 100% • Giả lập 12 lớp vân tay phần cứng qua Chrome/Edge CDP</p>
+      </div>
+    </div>
+    <div class="topbar-stats">
+      <div class="stat-pill">🌐 Nhân trình duyệt: <strong id="stat-browser">Đang dò...</strong></div>
+      <div class="stat-pill">🗂️ Tổng Profile: <strong id="stat-total">0</strong></div>
+      <div class="stat-pill">🟢 Đang mở: <strong id="stat-running">0</strong></div>
+      <div class="stat-pill">🛡️ Đã kiểm chứng: <strong id="stat-verified">0</strong></div>
+      <a href="/lab/fingerprint" target="_blank" class="btn btn-cyan btn-sm">🔬 Mở Phòng Lab Vân Tay</a>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="profiles">🗂️ Quản Lý Kho Profile (<span id="tab-count-profiles">0</span>)</button>
+    <button class="tab-btn" data-tab="matrix">⚖️ Ma Trận Đối Chiếu Chống Trùng Vân Tay</button>
+    <button class="tab-btn" data-tab="bulk">🏭 Xưởng Tạo Profile Hàng Loạt (Bulk Factory)</button>
+    <button class="tab-btn" data-tab="architecture">🛡️ Kiến Trúc 12 Lớp Bảo Vệ & Sao Lưu</button>
+  </nav>
+
+  <main class="main-wrap">
+    <!-- TAB 1: PROFILES FLEET -->
+    <section id="tab-profiles" class="tab-pane">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <input type="text" id="inp-search" placeholder="🔍 Tìm tên Profile, tài khoản, ghi chú, GPU..." style="width: 270px;" />
+          <select id="sel-filter-os">
+            <option value="ALL">💻 Tất cả Hệ điều hành</option>
+            <option value="windows">🪟 Windows 11</option>
+            <option value="macos">🍎 macOS Sonoma</option>
+            <option value="linux">🐧 Ubuntu Linux</option>
+          </select>
+          <select id="sel-filter-region">
+            <option value="ALL">🌍 Tất cả Quốc gia</option>
+            <option value="VN">🇻🇳 Việt Nam (VN)</option>
+            <option value="US">🇺🇸 Hoa Kỳ (US)</option>
+            <option value="UK">🇬🇧 Anh Quốc (UK)</option>
+            <option value="SG">🇸🇬 Singapore (SG)</option>
+            <option value="JP">🇯🇵 Nhật Bản (JP)</option>
+          </select>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn btn-primary" id="btn-open-create">➕ Tạo Profile Mới</button>
+          <button class="btn btn-purple" id="btn-quick-matrix">⚖️ Kiểm Chứng & So Sánh Đa Profile</button>
+        </div>
+      </div>
+
+      <div id="profiles-container" class="profiles-grid"></div>
+    </section>
+
+    <!-- TAB 2: MULTI-PROFILE FINGERPRINT COMPARISON MATRIX -->
+    <section id="tab-matrix" class="tab-pane hidden">
+      <div class="matrix-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h2 style="font-size:18px;color:#34d399;">⚖️ Ma Trận Đối Chiếu Độc Lập Vân Tay Giữa Các Profile</h2>
+            <p style="font-size:13px;color:var(--text-muted);">
+              Khởi chạy trình duyệt ngầm thực tế trên từng Profile, trích xuất mã băm Canvas 2D, WebGL, AudioContext, ClientRects và kiểm tra xem có bất kỳ thông số nào bị trùng lặp hay không.
+            </p>
+          </div>
+          <button class="btn btn-primary" id="btn-run-matrix">🚀 Chạy Kiểm Chứng & Đối Chiếu Ngay</button>
+        </div>
+
+        <div id="matrix-selector-list" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;"></div>
+      </div>
+
+      <div id="matrix-result-box"></div>
+    </section>
+
+    <!-- TAB 3: BULK PROFILE FACTORY -->
+    <section id="tab-bulk" class="tab-pane hidden">
+      <div class="matrix-card">
+        <h2 style="font-size:18px;color:#38bdf8;margin-bottom:6px;">🏭 Xưởng Khởi Tạo Hàng Loạt Profile Chống Vân Tay (Bulk Factory)</h2>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:18px;">
+          Tạo từ 1 đến 30 Profile độc lập chỉ trong 1 cú click. Mỗi Profile được cấp phát hạt giống nhiễu phần cứng (Canvas, Audio, WebGL, ClientRects, MediaDevices) khác nhau hoàn toàn.
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tên tiền tố (Prefix)</label>
+            <input type="text" id="bulk-prefix" value="MMO Account" />
+          </div>
+          <div class="form-group">
+            <label>Số lượng Profile cần tạo (1 - 30)</label>
+            <input type="number" id="bulk-count" value="5" min="1" max="30" />
+          </div>
+          <div class="form-group">
+            <label>Nhãn Nền tảng (Platform Tag)</label>
+            <input type="text" id="bulk-platform" value="Facebook / TikTok / Shopee" />
+          </div>
+          <div class="form-group">
+            <label>Phân bổ Hệ điều hành</label>
+            <select id="bulk-os">
+              <option value="mix">🔄 Kết hợp ngẫu nhiên Windows 11 & macOS</option>
+              <option value="windows">🪟 Chỉ Windows 11 (NVIDIA / AMD / Intel)</option>
+              <option value="macos">🍎 Chỉ macOS Sonoma (Apple M1/M2/M3)</option>
+              <option value="linux">🐧 Chỉ Ubuntu Linux</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quốc gia / Múi giờ / Ngôn ngữ</label>
+            <select id="bulk-region">
+              <option value="VN">🇻🇳 Việt Nam (Asia/Ho_Chi_Minh)</option>
+              <option value="US">🇺🇸 Hoa Kỳ (America/New_York)</option>
+              <option value="UK">🇬🇧 Anh Quốc (Europe/London)</option>
+              <option value="SG">🇸🇬 Singapore (Asia/Singapore)</option>
+              <option value="JP">🇯🇵 Nhật Bản (Asia/Tokyo)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>URL mở mặc định</label>
+            <input type="text" id="bulk-url" placeholder="Để trống = Mở Phòng Lab Vân Tay" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:14px;">
+          <label>Danh sách Proxy tùy chọn (Mỗi dòng 1 proxy định dạng <code>host:port</code> hoặc <code>host:port:user:pass</code>)</label>
+          <textarea id="bulk-proxies" rows="4" placeholder="103.145.22.11:8080:user1:pass1&#10;103.145.22.12:8080:user2:pass2"></textarea>
+        </div>
+
+        <div style="margin-top:16px;">
+          <button class="btn btn-primary" id="btn-submit-bulk">⚡ Khởi Tạo Hàng Loạt Ngay</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ARCHITECTURE & BACKUP -->
+    <section id="tab-architecture" class="tab-pane hidden">
+      <div class="matrix-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:18px;color:#34d399;">🛡️ Cơ Chế 12 Lớp Giả Lập Vân Tay Phần Cứng & Lưu Trữ</h2>
+            <p style="font-size:13px;color:var(--text-muted);">
+              Mọi Profile đều được lưu trữ cô lập trong <code>data/profiles/&lt;id&gt;</code> và tiêm mã giả lập qua giao thức CDP trước khi bất kỳ trang web nào kịp chạy script theo dõi.
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-cyan" id="btn-export-backup">📥 Xuất Toàn Bộ Backup (.json)</button>
+            <label class="btn btn-purple" style="cursor:pointer;">
+              📤 Nhập File Backup
+              <input type="file" id="inp-import-backup" accept=".json" style="display:none;" />
+            </label>
+          </div>
+        </div>
+
+        <div class="profiles-grid">
+          <div class="profile-card">
+            <div class="pcard-title">🎨 1. Nhiễu Độc Nhất Canvas 2D & DOM ClientRects</div>
+            <p style="font-size:13px;color:var(--text-muted);">
+              Can thiệp trực tiếp vào <code>getImageData</code>, <code>toDataURL</code> và <code>getBoundingClientRect</code> bằng thuật toán nhiễu tất định theo hạt giống (Seed) riêng của từng Profile. Hình ảnh hiển thị không đổi với mắt thường nhưng mã băm SHA-256 luôn độc nhất.
+            </p>
+          </div>
+          <div class="profile-card">
+            <div class="pcard-title">🎮 2. Giả Lập GPU WebGL & Nhiễu Sóng Âm AudioContext</div>
+            <p style="font-size:13px;color:var(--text-muted);">
+              Ghi đè tham số <code>UNMASKED_VENDOR_WEBGL (37445)</code> và <code>UNMASKED_RENDERER_WEBGL (37446)</code> khớp chặt chẽ với hệ điều hành (Apple Metal M3 cho macOS, Direct3D11 RTX 4080 cho Windows) kết hợp nhiễu vi sai trên <code>AudioBuffer</code>.
+            </p>
+          </div>
+          <div class="profile-card">
+            <div class="pcard-title">🔒 3. Khóa Chặn Rò Rỉ IP Thật Qua WebRTC & Đồng Bộ Địa Lý</div>
+            <p style="font-size:13px;color:var(--text-muted);">
+              Kết hợp cờ khởi chạy nhân Chromium <code>--force-webrtc-ip-handling-policy=disable_non_proxied_udp</code> và khóa <code>RTCPeerConnection</code>, đồng thời ép Múi giờ (<code>Emulation.setTimezoneOverride</code>), Tọa độ GPS và Ngôn ngữ khớp với quốc gia đã chọn.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: CREATE / EDIT PROFILE -->
+  <div id="modal-profile" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modal-profile-title">➕ Tạo Profile Chống Vân Tay Mới</h2>
+        <button class="btn btn-sm" id="btn-close-profile-modal">✖ Đóng</button>
+      </div>
+
+      <input type="hidden" id="edit-profile-id" />
+
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#080d18;border:1px solid var(--border);padding:10px 14px;border-radius:10px;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:12.5px;color:var(--text-muted);">
+          🎲 Chọn nhanh Hệ điều hành & Quốc gia để sinh bộ thông số phần cứng đồng bộ:
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="gen-os">
+            <option value="windows">🪟 Windows 11</option>
+            <option value="macos">🍎 macOS Sonoma</option>
+            <option value="linux">🐧 Ubuntu Linux</option>
+          </select>
+          <select id="gen-region">
+            <option value="VN">🇻🇳 Việt Nam</option>
+            <option value="US">🇺🇸 Hoa Kỳ</option>
+            <option value="UK">🇬🇧 Anh Quốc</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="JP">🇯🇵 Nhật Bản</option>
+          </select>
+          <button class="btn btn-cyan btn-sm" id="btn-randomize-modal-fp">🎲 Sinh Vân Tay Mới</button>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tên Profile</label>
+          <input type="text" id="prof-name" placeholder="VD: FB Ads US #01" />
+        </div>
+        <div class="form-group">
+          <label>Nhãn Nền tảng (Platform)</label>
+          <input type="text" id="prof-platform" placeholder="VD: Facebook / Shopee / TikTok" />
+        </div>
+        <div class="form-group">
+          <label>Tài khoản / Username</label>
+          <input type="text" id="prof-username" placeholder="VD: user@domain.com" />
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu (Password) & Khóa 2FA Base32</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="prof-password" placeholder="Mật khẩu..." style="flex:1;" />
+            <input type="text" id="prof-totp-secret" placeholder="JBSWY3DPEHPK3PXP" style="flex:1.2;" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL khởi động mặc định</label>
+          <input type="text" id="prof-start-url" placeholder="http://localhost:4120/lab/fingerprint" />
+        </div>
+        <div class="form-group">
+          <label>Chế độ Proxy</label>
+          <select id="prof-proxy-mode">
+            <option value="direct">🌐 Kết nối trực tiếp (Direct)</option>
+            <option value="http">🛡️ HTTP Proxy</option>
+            <option value="socks5">🧦 SOCKS5 Proxy</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Proxy Host : Port</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="prof-proxy-host" placeholder="103.x.x.x" style="flex:2;" />
+            <input type="text" id="prof-proxy-port" placeholder="8080" style="flex:1;" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Hệ điều hành (`navigator.platform`)</label>
+          <input type="text" id="prof-fp-platform" />
+        </div>
+        <div class="form-group">
+          <label>CPU Cores & RAM (GB)</label>
+          <div style="display:flex;gap:6px;">
+            <input type="number" id="prof-fp-cpu" value="8" style="flex:1;" />
+            <input type="number" id="prof-fp-ram" value="16" style="flex:1;" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Độ phân giải màn hình (Width × Height)</label>
+          <div style="display:flex;gap:6px;">
+            <input type="number" id="prof-fp-sw" value="1920" style="flex:1;" />
+            <input type="number" id="prof-fp-sh" value="1080" style="flex:1;" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Múi giờ (`Timezone`) & Ngôn ngữ (`Locale`)</label>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="prof-fp-tz" value="Asia/Ho_Chi_Minh" style="flex:1.4;" />
+            <input type="text" id="prof-fp-locale" value="vi-VN" style="flex:1;" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>WebGL Vendor</label>
+          <input type="text" id="prof-fp-vendor" />
+        </div>
+        <div class="form-group">
+          <label>Chính sách Chặn WebRTC</label>
+          <select id="prof-fp-webrtc">
+            <option value="disable">🔒 Khóa hoàn toàn WebRTC (Chống lộ IP thật 100%)</option>
+            <option value="real">⚠️ Cho phép WebRTC mặc định</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label>WebGL Unmasked Renderer (Card đồ họa)</label>
+        <input type="text" id="prof-fp-renderer" />
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label>User-Agent</label>
+        <input type="text" id="prof-fp-ua" />
+      </div>
+
+      <div class="form-grid" style="margin-top:12px;">
+        <div class="form-group">
+          <label>Canvas Seed</label>
+          <input type="number" id="prof-fp-cseed" />
+        </div>
+        <div class="form-group">
+          <label>Audio Seed</label>
+          <input type="number" id="prof-fp-aseed" />
+        </div>
+        <div class="form-group">
+          <label>ClientRects Seed</label>
+          <input type="number" id="prof-fp-rseed" />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label>Ghi chú vận hành</label>
+        <input type="text" id="prof-notes" placeholder="Ghi chú tài khoản, lịch sử nuôi..." />
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
+        <button class="btn" id="btn-cancel-profile">Hủy</button>
+        <button class="btn btn-primary" id="btn-save-profile">💾 Lưu Cấu Hình Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: COOKIE VAULT & NETPULSE SYNC -->
+  <div id="modal-cookies" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modal-cookies-title">🍪 Kho Lưu Trữ Cookie & Đồng Bộ Phiên</h2>
+        <button class="btn btn-sm" id="btn-close-cookies-modal">✖ Đóng</button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-cyan btn-sm" id="btn-fill-demo-cookies">⚡ Chèn Cookie Mẫu Demo</button>
+          <button class="btn btn-primary btn-sm" id="btn-import-cookies">📥 Nạp Cookie Vào Profile</button>
+          <button class="btn btn-danger btn-sm" id="btn-clear-cookies">🗑️ Xóa Sạch Cookie</button>
+        </div>
+        <button class="btn btn-purple btn-sm" id="btn-sync-netpulse">🔗 Đồng Bộ Sang NetPulse (4080)</button>
+      </div>
+
+      <div class="form-group">
+        <label>Danh sách Cookie JSON trong Profile (<span id="cookie-count-label">0</span> cookies)</label>
+        <textarea id="txt-cookies-json" rows="12" style="font-family:Consolas,monospace;font-size:12px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VERIFICATION REPORT -->
+  <div id="modal-verify" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modal-verify-title">🔬 Báo Cáo Kiểm Chứng Vân Tay Thực Tế</h2>
+        <button class="btn btn-sm" id="btn-close-verify-modal">✖ Đóng</button>
+      </div>
+      <div id="modal-verify-body"></div>
+    </div>
+  </div>
+
+  <div id="toast-box" class="toast hidden"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
+

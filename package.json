@@ -1,0 +1,11 @@
+{
+  "name": "anti-detect-browser",
+  "version": "1.0.0",
+  "description": "GhostProfile — Local Anti-Detect Browser & Multi-Account Fingerprint Manager (CDP Canvas/WebGL/Audio/WebRTC/Geo Spoofing)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test_server.js"
+  }
+}
+
